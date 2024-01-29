@@ -1,0 +1,76 @@
+﻿@page "/"
+<div style="margin-top: 2rem;">
+	@if (jsonData != null)
+    {
+        @foreach (var item in jsonData.hot)
+        {
+           
+            <MudCard style="margin: 1rem;">
+                <div style="position: relative;">
+                    <MudCardMedia Image="@((string)item.hotelpicture)" Height="200" />
+                    <div style="position:absolute; top: 1rem; left:1rem; padding:0.5rem; background-color: var(--mud-palette-primary); color: #ffff; font-size: 14px; border-radius: 10px; font-weight: bold; ">
+                       - @((int)(((float)item.priceold - (float)item.price) / (float)item.priceold * 100)) %
+                    </div>
+                   
+                    <div style="position: absolute; bottom:-1rem; left:0px; width: 100%;">
+                        <div style="display:flex; justify-content: center;">
+                            <div style="padding:0.25rem 1rem; background-color: var(--mud-palette-surface); border-radius: 1rem">
+                                <MudRating SelectedValue="@((int)item.hotelstars)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">@item.hotelname</MudText>
+                    <MudText Typo="Typo.caption">@item.countryname, @item.hotelregionname</MudText>
+                    <br/>
+                    <MudText Typo="Typo.caption">@item.flydate, @item.nights ночей</MudText>
+                    <br />
+                    <MudText Typo="Typo.caption"> из @item.departurefrom</MudText>
+                    <MudDivider/>
+                    <div style="display:flex; align-items:center; gap:4px; margin-top:8px;">
+                            <MudIcon Icon="@Icons.Material.Filled.Payments" Title="Favorite" Size="Size.Small" Color="Color.Success" />
+                            <MudText Typo="Typo.body2">Цена: @item.price T</MudText>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:4px; margin-top:8px;">
+                        <MudIcon Icon="@Icons.Material.Filled.Restaurant" Title="Favorite" Size="Size.Small" Color="Color.Success" />
+                        <MudText Typo="Typo.body2">Обед: @item.meal</MudText>
+                    </div>
+                </MudCardContent>
+
+                <div style="display:flex; flex-direction:row-reverse; width: 100%;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Error" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Success" />
+  
+                </div>
+                </MudCard>
+        }
+
+    }
+    else
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    }
+
+    
+</div>
+@code {
+    private dynamic? jsonData = null;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync("https://tourvisor.ru/xml/modhot.php?format=json&currency=3&referrer=https%3A%2F%2Fgolden-travel.kz%2F");
+            response.EnsureSuccessStatusCode();
+            var jsonString = await response.Content.ReadAsStringAsync();
+            jsonData = JsonConvert.DeserializeObject(jsonString);
+            var a = jsonData;
+        }catch(Exception e)
+        {
+            //TODO: А хуй тебе а не карточки
+        }
+       
+    }
+}
