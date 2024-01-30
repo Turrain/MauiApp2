@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject IDialogService Dialog
+
 @inject NavigationManager navMgr
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -10,7 +12,7 @@
     <MudAppBar>
        <div style="display:flex; align-items:center; justify-content: space-between; width:100%;">
             <MudText Typo="Typo.h6">SecPass v1.0</MudText>
-
+            
             <MudToggleIconButton @bind-Toggled="@_isDarkMode"
                                  Icon="@Icons.Material.Filled.LightMode" Color="@Color.Default" Title="Off"
                                  ToggledIcon="@Icons.Material.Filled.ModeNight" ToggledColor="@Color.Success" ToggledTitle="On" />
@@ -19,7 +21,7 @@
 
     </MudAppBar>
     <MudAppBar Color="Color.Surface" Bottom="true" style="height:70px !Important ; background-color: var(--mud-palette-surface);">
-        <MudIconButton Class="ma-auto" Icon="@Icons.Material.Filled.Search" Variant="Variant.Text" Color="Color.Info" Size="Size.Medium" @onclick="@(()=>navMgr.NavigateTo("/counter"))" />
+        <MudIconButton Class="ma-auto" Icon="@Icons.Material.Filled.Search" Variant="Variant.Text" Color="Color.Info" Size="Size.Medium" OnClick="@((e) => OpenDialog())" />
         <MudIconButton Class="ma-auto" Icon="@Icons.Material.Filled.LocalFireDepartment" Variant="Variant.Text" Color="Color.Error" Size="Size.Large" @onclick="@(()=>navMgr.NavigateTo("/"))" />
 
         <MudIconButton Class="ma-auto" Icon="@Icons.Material.Filled.Person" Variant="Variant.Text" Color="Color.Info" Size="Size.Medium" />
@@ -36,4 +38,9 @@
     private MudTheme _theme = new();
     private bool _isDarkMode;
     public bool AlarmOn { get; set; }
+
+    private void OpenDialog()
+    {
+        Dialog.Show<Pages.SearchDialog>("Поиск", new DialogOptions() { Position = DialogPosition.TopCenter });
+    }
 }

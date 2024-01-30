@@ -16,6 +16,7 @@ namespace MauiApp2
 
 			builder.Services.AddMauiBlazorWebView();
 			builder.Services.AddMudServices();
+			builder.Services.AddMudBlazorDialog();
 			builder.Services.AddSingleton<PrefStorage>();
 
 #if DEBUG
