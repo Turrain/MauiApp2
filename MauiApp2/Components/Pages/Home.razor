@@ -62,7 +62,7 @@
         try
         {
             var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync("https://tourvisor.ru/xml/modhot.php?format=json&currency=3&referrer=https%3A%2F%2Fgolden-travel.kz%2F");
+            var response = await httpClient.GetAsync("https://tourvisor.ru/xml/modhot.php?format=json&currency=3&referrer=https://travelstory.kz");
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
             jsonData = JsonConvert.DeserializeObject(jsonString);

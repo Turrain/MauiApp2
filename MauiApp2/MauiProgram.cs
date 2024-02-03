@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
+using Newtonsoft.Json;
 namespace MauiApp2
 {
 	public static class MauiProgram
@@ -23,6 +24,7 @@ namespace MauiApp2
 			builder.Services.AddBlazorWebViewDeveloperTools();
 			builder.Logging.AddDebug();
 #endif
+			
 
 			return builder.Build();
 		}

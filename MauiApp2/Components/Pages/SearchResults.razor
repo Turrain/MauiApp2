@@ -1,0 +1,156 @@
+﻿@page "/search_result/{datefrom}/{dateto}/{adults}/{child}/{country}/{departure}/"
+@inject NavigationManager navMgr
+<div style="margin-top: 2rem;">
+    @if (jsonObject != null)
+    {
+        @if (jsonObject.data.block != null)
+        {
+            @foreach (var block in jsonObject.data.block)
+            {
+                @foreach (dynamic hotel in ((JArray)block.hotel).Take(5))
+                {
+                     <MudCard style="margin: 1rem;">
+                    <div style="position: relative;">
+                      <MudCardMedia Image="@((string)jsonObject.data.decode.hotels[(string)hotel.id].pic)" Height="200" />
+                        
+
+                        <div style="position: absolute; bottom:-1rem; left:0px; width: 100%;">
+                            <div style="display:flex; justify-content: center;">
+                                <div style="padding:0.25rem 1rem; background-color: var(--mud-palette-surface); border-radius: 1rem">
+                                        <MudRating SelectedValue="@((int)jsonObject.data.decode.hotels[(string)hotel.id].stars)" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <MudCardContent>
+                            <MudText Typo="Typo.h6">@jsonObject.data.decode.hotels[(string)hotel.id].name</MudText>
+                                <MudText Typo="Typo.caption">@jsonObject.data.decode.hotels[(string)hotel.id].region,</MudText>
+                                <MudText Typo="Typo.caption">@((string)jsonObject.data.decode.hotels[(string)hotel.id].subregion)</MudText>
+                            <MudDivider />
+                            <div style="display:flex; align-items:center; gap:4px; margin-top:8px;">
+                                <MudIcon Icon="@Icons.Material.Filled.Payments" Title="Favorite" Size="Size.Small" Color="Color.Success" />
+                                <MudText Typo="Typo.body2">Цена: @hotel.price T</MudText>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:4px; margin-top:8px;">
+                                <MudIcon Icon="@Icons.Material.Filled.RateReview" Title="Favorite" Size="Size.Small" Color="Color.Success" />
+                                <MudText Typo="Typo.body2">Рейтинг: @jsonObject.data.decode.hotels[(string)hotel.id].rating</MudText>
+                            </div>
+                                <div style="display:flex; align-items:center; gap:4px; margin-top:8px;">
+                                    <MudIcon Icon="@Icons.Material.Filled.People" Title="Favorite" Size="Size.Small" Color="Color.Success" />
+                                    <MudText Typo="Typo.body2">Популярность: @jsonObject.data.decode.hotels[(string)hotel.id].pop</MudText>
+                                </div>
+                                <MudDivider/>
+                                <MudText Typo="Typo.body2">@jsonObject.data.decode.hotels[(string)hotel.id].desc</MudText>
+                                <div>
+                                    <MudExpansionPanels MultiExpansion="true">
+                                    
+                                
+                                    @foreach (var tour in hotel.tour)
+                {
+
+
+                                        <MudExpansionPanel Text="@($"{jsonObject.data.decode.tourname[(string)tour.nm].name} за {tour.pr} T")">
+                                            <div style="display:flex; flex-direction:column; gap:4px; padding:8px;">
+                                                <div style="display:flex; flex-direction:row; gap:8px;">
+                                                    <MudIcon Icon="@Icons.Material.Filled.Bed" Title="Favorite" />
+                                                    <MudText Typo="Typo.body2">Ночей: @tour.nt</MudText>
+                                                </div>
+                                                    <div style="display:flex; flex-direction:row; gap:8px;">
+                                                        <MudIcon Icon="@Icons.Material.Filled.Restaurant" Title="Favorite" />
+                                                        <MudText Typo="Typo.body2"> Тип Обеда:@jsonObject.data.decode.meal[(string)tour.ml].name</MudText>
+                                                    </div>
+                                                    <div style="display:flex; flex-direction:row; gap:8px;">
+                                                        <MudIcon Icon="@Icons.Material.Filled.RoomPreferences" Title="Favorite" />
+                                                        <MudText Typo="Typo.body2"> Тип Комнат:@jsonObject.data.decode.rooms[(string)tour.rm].name </MudText>
+                                                    </div>
+                                            </div>
+                                            <div style="display:flex; flex-direction:row-reverse; width:100%; ">
+                                                    <MudButton @onclick="@(()=> navMgr.NavigateTo($"/tour/{tour.id}"))" Variant="Variant.Text" EndIcon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Size="Size.Small">Читать далее</MudButton>
+                                            </div>
+                                        </MudExpansionPanel>
+                                }
+                                </MudExpansionPanels>
+
+                                </div>
+
+                        </MudCardContent>
+                        <div style="display:flex; flex-direction:row-reverse; width: 100%;">
+                            <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Error" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Success" />
+
+                        </div>
+                    </MudCard>
+                }
+            }
+        }
+        else
+        {
+            <MudText> Ничего не найдено </MudText>
+        }
+    }
+    else
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    }
+
+
+</div>
+@code {
+
+    private dynamic? jsonData = null;
+    private dynamic? jsonObject = null;
+    [Parameter]
+    public string datefrom { get; set; }
+    [Parameter]
+    public string dateto { get; set; }
+    [Parameter]
+    public string adults { get; set; }
+    [Parameter]
+    public string child { get; set; }
+    [Parameter]
+    public string country { get; set; }
+    [Parameter]
+    public string departure { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var httpClient = new HttpClient();
+
+            var response = await httpClient.GetAsync($"https://tourvisor.ru/xml/modsearch.php?datefrom={datefrom}&dateto={dateto}&adults={adults}&child={child}&country={country}&departure={departure}&referrer=https://travelstory.kz"
+    );
+            response.EnsureSuccessStatusCode();
+            var jsonString = await response.Content.ReadAsStringAsync();
+
+
+            var jsonString2 = System.Web.HttpUtility.HtmlDecode(jsonString);
+
+            jsonData = JsonConvert.DeserializeObject(jsonString2);
+            var a = jsonData.result.requestid;
+
+            do
+            {
+                var response2 = await httpClient.GetAsync($"https://search3.tourvisor.ru/modresult.php?json&requestid={a}&referrer=https://travelstory.kz");
+                response2.EnsureSuccessStatusCode();
+                var jsonString3 = await response2.Content.ReadAsStringAsync();
+                var jsonString4 = System.Web.HttpUtility.HtmlDecode(jsonString3);
+                jsonData = JsonConvert.DeserializeObject(jsonString4);
+                jsonObject = JObject.Parse(jsonString4);
+            //    dynamic s = jsonObject.data.decode.hotels["17422"];
+                if (jsonData.data.status.progress == 100) break;
+                await Task.Delay(2000);
+
+            } while (true);
+            Console.WriteLine("AA");
+
+        }
+		catch (Exception e)
+		{
+			//TODO: А хуй тебе а не карточки
+		}
+
+	}
+}

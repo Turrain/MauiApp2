@@ -1,186 +1,152 @@
 ﻿@using FluentValidation
-
+@inject NavigationManager navMgr
 <MudDialog>
-    <DialogContent>
+	<DialogContent>
 
 		<MudCard>
-			<MudForm Model="@model" @ref="@form" Validation="@(orderValidator.ValidateValue)" ValidationDelay="0">
+			<MudForm  @ref="@form"  ValidationDelay="0">
 				<MudCardContent>
+					@if (jsonData != null)
+					{
+						<MudStack Row="true">
+					
+							<MudSelect @bind-Value="stringValue" Label="Выберите" HelperText="Откуда" Placeholder="Сделайте выбор" AdornmentIcon="@Icons.Material.Filled.FlightTakeoff" AdornmentColor="Color.Primary">
+								@foreach (var item in jsonData.lists.departures.departure)
+								{
+									<MudSelectItem Value="@((int)(item.id))">@((string)item.name)</MudSelectItem>
+								}
 
-                    <MudSelect @bind-Value="stringValue" Label="Select fast-food" HelperText="String" Placeholder="Please Select" AdornmentIcon="@Icons.Material.Filled.Fastfood" AdornmentColor="Color.Primary">
-                        @foreach (var item in jsonData.lists.departures.departure)
-                        {
-                            <MudSelectItem Value="@((int)(item.id))">@item.name</MudSelectItem>
-                        }
-                       
-                    </MudSelect>
-                    
+							</MudSelect>
+						<MudStack>
+							<MudSelect  @bind-Value="stringValue2" Label="Выберите" HelperText="Куда" Placeholder="Сделайте выбор" AdornmentIcon="@Icons.Material.Filled.FlightLand" AdornmentColor="Color.Primary">
+								@foreach (var item in jsonData.lists.countries.country)
+								{
+									<MudSelectItem Value="@((int)(item.id))">
+										<img src="@($"https://tourvisor.ru/pics/flags/medium/flag_{(int)(item.id)}.png")" height="14" />
+										@((string)item.name)
+									</MudSelectItem>
+								}
 
-					<MudTextField @bind-Value="model.Name"
-								  For="@(() => model.Name)"
-								  Immediate="true"
-								  Label="Name" />
+							</MudSelect>
+								@if (stringValue2 != 0)
+								{
+									
+									<MudButton Variant="Variant.Text" Color="Color.Primary">Выбрать курорт</MudButton>
+								}
+							
+							</MudStack>
+						</MudStack>
+						<MudStack Row="true">
+							<MudDatePicker Label="Выберите дату" @bind-Date="date" DisableToolbar HelperText="От" />
+								<MudDatePicker Label="Выберите дату" @bind-Date="date2" DisableToolbar HelperText="До" />
+							</MudStack>
+						<MudStack Spacing="2">
+							<MudButton EndIcon="@(_expanded ? Icons.Material.Filled.ExpandLess : @Icons.Material.Filled.ExpandMore)" OnClick="OnExpandCollapseClick">Дополнительно</MudButton>
+							<MudDivider />
+							<MudCollapse Expanded="_expanded">
+								<MudStack Row="true">
+									<MudNumericField @bind-Value="IntValue" Label="Количество ночей" HelperText="От" Variant="Variant.Text" Min="0" Max="IntValue2" />
+									<MudNumericField @bind-Value="IntValue2" HelperText="До" Variant="Variant.Text" Min="IntValue" Max="10" />
+								</MudStack>
+								<MudStack Row="true">
+									<MudNumericField @bind-Value="IntValue3" Label="Кол-во взрослых"  Variant="Variant.Text" Min="1" Max="10" />
+									<MudNumericField @bind-Value="IntValue4" Label="Кол-во детей" Variant="Variant.Text" Min="0" Max="10" />
+								</MudStack>
+							</MudCollapse>
+						</MudStack>
+					}
+					else
+					{
+						<MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+					}
 
-					<MudTextField @bind-Value="model.Email"
-								  For="@(() => model.Email)"
-								  Immediate="true"
-								  Label="Email" />
 
-					<MudTextField @bind-Value="model.CCNumber"
-								  For="@(() => model.CCNumber)"
-								  Immediate="true"
-								  Label="Credit card nr" />
-
-					<MudTextField @bind-Value="model.Address.Address"
-								  For="@(() => model.Address.Address)"
-								  Immediate="true"
-								  Label="Address" />
-
-					<MudTextField @bind-Value="model.Address.City"
-								  For="@(() => model.Address.City)"
-								  Immediate="true"
-								  Label="City" />
-
-					<MudTextField @bind-Value="model.Address.Country"
-								  For="@(() => model.Address.Country)"
-								  Immediate="true"
-								  Label="Country" />
 				</MudCardContent>
 			</MudForm>
-			<MudCardActions>
-				<MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Order</MudButton>
-			</MudCardActions>
+		
 		</MudCard>
 	</DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
-    </DialogActions>
+	<DialogActions>
+		<MudButton OnClick="Cancel">Cancel</MudButton>
+		<MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+	</DialogActions>
 </MudDialog>
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+	[CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    //void Submit() => MudDialog.Close(DialogResult.Ok(true));
-    void Cancel() => MudDialog.Cancel();
+	void Submit() {
+		navMgr.NavigateTo($"/search_result/{date?.ToString("dd.mm.yyyy")}/{date2?.ToString("dd.mm.yyyy")}/{IntValue3}/{IntValue4}/{stringValue2}/{stringValue}");
+		MudDialog.Close(DialogResult.Ok(true));
 
-    private string stringValue { get; set; }
-    [Inject] ISnackbar Snackbar { get; set; }
+	}
+	void Cancel() => MudDialog.Cancel();
 
-    MudForm form;
+	private int stringValue { get; set; } 
+	private int stringValue2 { get; set; } 
 
-    OrderModelFluentValidator orderValidator = new OrderModelFluentValidator();
+	DateTime? date	=	DateTime.Today;
+	DateTime? date2 =	DateTime.Now.AddDays(5).Date;
 
-    OrderModel model = new OrderModel();
 
-    public class OrderModel
-    {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string CCNumber { get; set; } = "4012 8888 8888 1881";
-        public AddressModel Address { get; set; } = new AddressModel();
-        public List<OrderDetailsModel> OrderDetails = new List<OrderDetailsModel>()
-        {
-            new OrderDetailsModel()
-                {
-                    Description = "Perform Work order 1",
-                    Offer = 100
-                },
-            new OrderDetailsModel()
-        };
-    }
+	public int IntValue { get; set; } = 0;
+	public int IntValue2 { get; set; } = 7;
+	public int IntValue3 { get; set; } = 2;
+	public int IntValue4 { get; set; } = 0;
+	bool _expanded = false;
 
-    public class AddressModel
-    {
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string Country { get; set; }
-    }
+	private void OnExpandCollapseClick()
+	{
+		_expanded = !_expanded;
+	}
+	[Inject] ISnackbar Snackbar { get; set; }
 
-    public class OrderDetailsModel
-    {
-        public string Description { get; set; }
-        public decimal Offer { get; set; }
-    }
+	MudForm form;
 
-    private async Task Submit()
-    {
-        await form.Validate();
+	public void stringValue2Changed(int value)
+	{
+		Snackbar.Add($"Выбрано {value}");
+	}
+	private dynamic? jsonData = null;
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			var httpClient = new HttpClient();
 
-        if (form.IsValid)
-        {
-            Snackbar.Add("Submited!");
-        }
-    }
+			var response = await httpClient.GetAsync("https://tourvisor.ru/xml/listdev.php?type=departure,allcountry,country,region,subregions,operator&cndep=59&flydeparture=59&flycountry=0&format=json&referrer=https://travelstory.kz");
+			response.EnsureSuccessStatusCode();
+			var jsonString = await response.Content.ReadAsStringAsync();
 
-    /// <summary>
-    /// A standard AbstractValidator which contains multiple rules and can be shared with the back end API
-    /// </summary>
-    /// <typeparam name="OrderModel"></typeparam>
-    public class OrderModelFluentValidator : AbstractValidator<OrderModel>
-    {
-        public OrderModelFluentValidator()
-        {
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .Length(1, 100);
+			await Task.Delay(1000);
+			var jsonString2 = System.Web.HttpUtility.HtmlDecode(jsonString);
+		
+		
+			Encoding utf8Encoding = Encoding.UTF8; // UTF-8 encoding
+			byte[] unicodeBytes = utf8Encoding.GetBytes(jsonString); // Convert Unicode string to bytes
+			string decodedString = utf8Encoding.GetString(unicodeBytes);
 
-            RuleFor(x => x.Email)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .EmailAddress()
-                .MustAsync(async (value, cancellationToken) => await IsUniqueAsync(value));
+			jsonData = JsonConvert.DeserializeObject(jsonString2);
+			var a = jsonData;
+		}
+		catch (Exception e)
+		{
+			//TODO: А хуй тебе а не карточки
+		}
 
-            RuleFor(x => x.CCNumber)
-                .NotEmpty()
-                .Length(1, 100)
-                .CreditCard();
-
-            RuleFor(x => x.Address.Address)
-                .NotEmpty()
-                .Length(1, 100);
-
-            RuleFor(x => x.Address.City)
-                .NotEmpty()
-                .Length(1, 100);
-
-            RuleFor(x => x.Address.Country)
-                .NotEmpty()
-                .Length(1, 100);
-        }
-
-        private async Task<bool> IsUniqueAsync(string email)
-        {
-            // Simulates a long running http call
-            await Task.Delay(2000);
-            return email.ToLower() != "test@test.com";
-        }
-
-        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-        {
-            var result = await ValidateAsync(ValidationContext<OrderModel>.CreateWithOptions((OrderModel)model, x => x.IncludeProperties(propertyName)));
-            if (result.IsValid)
-                return Array.Empty<string>();
-            return result.Errors.Select(e => e.ErrorMessage);
-        };
-    }
-    private dynamic? jsonData = null;
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync("https://tourvisor.ru/xml/listdev.php?type=departure,allcountry,country,region,subregions,operator&cndep=59&flydeparture=59&flycountry=0&format=json&referrer=https%3A%2F%2Fgolden-travel.kz%2F");
-            response.EnsureSuccessStatusCode();
-            var jsonString = await response.Content.ReadAsStringAsync();
-            jsonData = JsonConvert.DeserializeObject(jsonString);
-            var a = jsonData;
-        }
-        catch (Exception e)
-        {
-            //TODO: А хуй тебе а не карточки
-        }
-
-    }
+	}
 }
 
-}
+@* все
+https://tourvisor.ru/xml/listdev.php?type=departure,allcountry,country,region,subregions,operator&cndep=59&flydeparture=59&flycountry=0&format=json&referrer=https%3A%2F%2Fgolden-travel.kz%2F
+
+Отели
+https://tourvisor.ru/xml/listdev.php?type=allhotel&hotcountry=16&format=json&referrer=https%3A%2F%2Fgolden-travel.kz%2F&session=
+
+хуй пойми что
+https://tourvisor.ru/api/v1.1/hotel-service-groups/all?sortDir=desc&sortProp=order&countryId=16&referrer=https%3A%2F%2Fgolden-travel.kz%2F&session=
+
+Тип отеля
+https://tourvisor.ru/api/v1.1/hotel-actypes/all?active=true&sortProp=order&countryId=16&referrer=https%3A%2F%2Fgolden-travel.kz%2F&session=
+
+Ночи
+https://tourvisor.ru/xml/getnights.php?country=16&datefrom=01.02.2024&dateto=10.02.2024&departure=59&regular=1&referrer=https%3A%2F%2Fgolden-travel.kz%2F&session= *@
