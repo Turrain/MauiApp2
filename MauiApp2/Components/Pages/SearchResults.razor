@@ -3,6 +3,10 @@
 <div style="margin-top: 2rem;">
     @if (jsonObject != null)
     {
+        @if (jsonObject.data.status.progress != 100)
+        {
+            <MudProgressLinear Color="Color.Primary" Value="@((int)jsonObject.data.status.progress)"/>
+        }
         @if (jsonObject.data.block != null)
         {
             @foreach (var block in jsonObject.data.block)
@@ -36,12 +40,12 @@
                                 <MudIcon Icon="@Icons.Material.Filled.RateReview" Title="Favorite" Size="Size.Small" Color="Color.Success" />
                                 <MudText Typo="Typo.body2">Рейтинг: @jsonObject.data.decode.hotels[(string)hotel.id].rating</MudText>
                             </div>
-                                <div style="display:flex; align-items:center; gap:4px; margin-top:8px;">
+                                <div style="display:flex; align-items:center; gap:4px; margin-top:8px; margin-bottom:8px;">
                                     <MudIcon Icon="@Icons.Material.Filled.People" Title="Favorite" Size="Size.Small" Color="Color.Success" />
                                     <MudText Typo="Typo.body2">Популярность: @jsonObject.data.decode.hotels[(string)hotel.id].pop</MudText>
                                 </div>
-                                <MudDivider/>
-                                <MudText Typo="Typo.body2">@jsonObject.data.decode.hotels[(string)hotel.id].desc</MudText>
+                                <MudDivider Style="margin-bottom:8px;"/>
+                                <MudText Style="margin-bottom:8px;"  Typo="Typo.body2">@jsonObject.data.decode.hotels[(string)hotel.id].desc</MudText>
                                 <div>
                                     <MudExpansionPanels MultiExpansion="true">
                                     
@@ -75,11 +79,7 @@
                                 </div>
 
                         </MudCardContent>
-                        <div style="display:flex; flex-direction:row-reverse; width: 100%;">
-                            <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Error" />
-                            <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Success" />
-
-                        </div>
+                       
                     </MudCard>
                 }
             }
@@ -140,7 +140,9 @@
                 jsonData = JsonConvert.DeserializeObject(jsonString4);
                 jsonObject = JObject.Parse(jsonString4);
             //    dynamic s = jsonObject.data.decode.hotels["17422"];
+                InvokeAsync(StateHasChanged);
                 if (jsonData.data.status.progress == 100) break;
+
                 await Task.Delay(2000);
 
             } while (true);

@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject NavigationManager navMgr
 <div style="margin-top: 2rem;">
 	@if (jsonData != null)
     {
@@ -40,13 +41,16 @@
                 </MudCardContent>
 
                 <div style="display:flex; flex-direction:row-reverse; width: 100%;">
+                        <MudButton @onclick="@(()=> navMgr.NavigateTo($"/tour/{item.tourid2}"))" Variant="Variant.Text" EndIcon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Size="Size.Small">Читать далее</MudButton>
                     <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Error" />
                     <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Success" />
   
                 </div>
                 </MudCard>
         }
-
+      
+            
+    
     }
     else
     {
