@@ -1,46 +1,49 @@
 ﻿@inherits LayoutComponentBase
 @inject IDialogService Dialog
+@inject GlobalPrefs prefs
 
+<MudThemeProvider @bind-IsDarkMode="@prefs.isDarkMode" Theme="_theme" />
 @inject NavigationManager navMgr
 <MudDialogProvider MaxWidth="MaxWidth.Large" />
 <MudSnackbarProvider />
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+
 
 
 
 <MudLayout>
-    <MudAppBar>
+    <MudAppBar Elevation="0">
        <div style="display:flex; align-items:center; justify-content: space-between; width:100%;">
             <MudText Typo="Typo.h6">SecPass v1.0</MudText>
-            
-            <MudToggleIconButton @bind-Toggled="@_isDarkMode"
-                                 Icon="@Icons.Material.Filled.LightMode" Color="@Color.Default" Title="Off"
-                                 ToggledIcon="@Icons.Material.Filled.ModeNight" ToggledColor="@Color.Success" ToggledTitle="On" />
        </div>
-     
-
     </MudAppBar>
+
     <MudAppBar Color="Color.Surface" Bottom="true" style="height:70px !Important ; background-color: var(--mud-palette-surface);">
         <MudIconButton Class="ma-auto" Icon="@Icons.Material.Filled.Search" Variant="Variant.Text" Color="Color.Info" Size="Size.Medium" OnClick="@((e) => OpenDialog())" />
         <MudIconButton Class="ma-auto" Icon="@Icons.Material.Filled.LocalFireDepartment" Variant="Variant.Text" Color="Color.Error" Size="Size.Large" @onclick="@(()=>navMgr.NavigateTo("/"))" />
 
-        <MudIconButton Class="ma-auto" Icon="@Icons.Material.Filled.Person" Variant="Variant.Text" Color="Color.Info" Size="Size.Medium" />
+        <MudIconButton Class="ma-auto" Icon="@Icons.Material.Filled.Person" Variant="Variant.Text" Color="Color.Info" Size="Size.Medium" @onclick="@(()=>navMgr.NavigateTo("/settings"))" />
     </MudAppBar>
 
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.False">
+    <MudMainContent Style="margin-bottom:80px;">
+     
             @Body
-        </MudContainer>
+      
     </MudMainContent>
 </MudLayout>
 
 @code {
     private MudTheme _theme = new();
-    private bool _isDarkMode;
-    public bool AlarmOn { get; set; }
 
+
+    public bool AlarmOn { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        prefs.themeChanged += (bool value) => StateHasChanged();
+    }
     private void OpenDialog()
     {
+      
         Dialog.Show<Pages.SearchDialog>("Поиск", new DialogOptions() { Position = DialogPosition.TopCenter });
     }
 }

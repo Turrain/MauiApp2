@@ -1,17 +1,132 @@
-﻿@page "/tour/{tourid}"
+﻿
+@page "/tour/{tourid}"
 @if (jsonData != null)
 {
-    <MudCarousel  Style="height:350px; width:100%;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="true" TData="object">
+    <MudCarousel Style="height:350px; width:100%;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="true" TData="object">
         @foreach (var img in jsonData.data.hotel.images)
         {
             <MudCarouselItem Transition="@Transition.Slide">
-                <MudImage ObjectFit="@ObjectFit.Cover"  Src="@((string)img.big)" Height="550" />
+                <MudImage ObjectFit="@ObjectFit.Cover" Src="@((string)img.big)" Height="550" />
             </MudCarouselItem>
         }
-      
- 
+
+
     </MudCarousel>
-    @jsonData
+
+    <div>
+        <div style="padding: 16px;">
+            <div style="display: flex; flex-direction: row; width: 100%;">
+                <div style="width: 100%;">
+                    <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-between">
+                        <div style="font-size: 20px; line-height: 28px; font-weight: 300;">@jsonData.data.hotel.hotelname</div>
+                        <div style="font-size: 20px; line-height: 28px; white-space: nowrap">@jsonData.data.tour.cleanprice T</div>
+                    </div>
+                    @* <i *ngFor="let item of makeRange(tour_details.data.hotel.hotelstars)" *@
+                    @* class="fas fa-star text-yellow-400"></i> *@
+                    <div style="font-size: 14px; line-height: 20px; font-weight: 300; text-align: right;">
+                        @jsonData.data.hotel.countryname,
+                        @jsonData.data.hotel.hotelregionname
+                    </div>
+                    <MudRating ReadOnly="true" SelectedValue="(int)(jsonData.data.tour.hotelstars)" Style="display: flex; justify-content: center;" />
+                    <div style="display: flex; gap: 4px; align-items: center; justify-content: center">
+                        <div style="font-size: 14px; line-height: 20px; font-weight: 300;">
+                            Рейтинг: @jsonData.data.hotel.rating (@jsonData.data.hotel.reviewscount отзывов)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding: 16px; padding-top: 8px; padding-bottom: 8px;">
+            <div style="font-size: 20px; line-height: 28px; font-weight: 300;">Описание</div>
+            <MudDivider></MudDivider>
+            <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">Название тура: @jsonData.data.tour.tourname</div>
+            <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">Цена: @jsonData.data.tour.cleanprice</div>
+            <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">
+                @jsonData.data.tour.countryname, @jsonData.data.tour.hotelregionname из
+                @jsonData.data.tour.departurenamefrom
+            </div>
+            <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">@jsonData.data.hotel.hoteldescription</div>
+        </div>
+
+        <div style="padding: 16px; padding-top: 8px; padding-bottom: 8px;">
+            <div style="font-size: 20px; line-height: 28px; font-weight: 300;">Основная информация</div>
+            <MudDivider></MudDivider>
+            <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">
+                Год постройки: @if (@jsonData.data.hotel.detail.build != null)
+                {
+                    @jsonData.data.hotel.detail.build
+                }
+            </div>
+            <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">
+                Расположение: @if (@jsonData.data.hotel.detail.placement != null)
+                {
+                    @jsonData.data.hotel.detail.placement
+                }
+            </div>
+            <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">
+                Территория: @if (@jsonData.data.hotel.detail.territory != null)
+                {
+                    @((MarkupString)((string)@jsonData.data.hotel.detail.territory))
+                }
+            </div>
+        </div>
+
+       
+
+
+        @if (@jsonData.data.hotel.detail.beach != null)
+        {
+            <div style="padding: 16px; padding-top: 8px; padding-bottom: 8px;">
+                <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">Пляж</div>
+                <MudDivider></MudDivider>
+                @((MarkupString)((string)@jsonData.data.hotel.detail.beach))
+            </div>
+        }
+
+        @if (@jsonData.data.hotel.detail.child != null)
+        {
+            <div style="padding: 16px; padding-top: 8px; padding-bottom: 8px;">
+                <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">Детям</div>
+                <MudDivider></MudDivider>
+                @((MarkupString)((string)@jsonData.data.hotel.detail.child))
+            </div>
+        }
+
+        @if (@jsonData.data.hotel.detail.inroom != null && @jsonData.data.hotel.detail.roomtypes != null)
+        {
+            <div style="padding: 16px; padding-top: 8px; padding-bottom: 8px;">
+                <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">Комнаты</div>
+                <MudDivider></MudDivider>
+                @((MarkupString)((string)@jsonData.data.hotel.detail.inroom))
+                @((MarkupString)((string)@jsonData.data.hotel.detail.roomtypes))
+            </div>
+        }
+
+        @if (@jsonData.data.hotel.detail.meallist != null)
+        {
+            <div style="padding: 16px; padding-top: 8px; padding-bottom: 8px;">
+                <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">Обед</div>
+                <MudDivider></MudDivider>
+                @((MarkupString)((string)@jsonData.data.hotel.detail.meallist))
+            </div>
+        }
+
+        @if (@jsonData.data.hotel.detail.servicepay != null && @jsonData.data.hotel.detail.services != null)
+        {
+            <div style="padding: 16px; padding-top: 8px; padding-bottom: 8px;">
+                <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">Сервисы</div>
+                <MudDivider></MudDivider>
+                @((MarkupString)((string)@jsonData.data.hotel.detail.servicepay))
+                @((MarkupString)((string)@jsonData.data.hotel.detail.services))
+            </div>
+        }
+    </div>
+    @* @jsonData.data.tour.hotelstars *@
+}
+else
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
 }
 
 @code {
@@ -29,7 +144,7 @@
             var jsonString = await response.Content.ReadAsStringAsync();
             var jsonString2 = System.Web.HttpUtility.HtmlDecode(jsonString);
             jsonData = JsonConvert.DeserializeObject(jsonString2);
-            var a = jsonData.result.requestid;
+            var a = jsonData.result.requestid; //govno for debug
         }
         catch (Exception e)
         {

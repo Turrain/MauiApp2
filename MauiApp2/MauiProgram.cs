@@ -19,6 +19,7 @@ namespace MauiApp2
 			builder.Services.AddMudServices();
 			builder.Services.AddMudBlazorDialog();
 			builder.Services.AddSingleton<PrefStorage>();
+			builder.Services.AddSingleton<GlobalPrefs>();
 
 #if DEBUG
 			builder.Services.AddBlazorWebViewDeveloperTools();

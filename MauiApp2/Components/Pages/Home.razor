@@ -16,7 +16,7 @@
                     <div style="position: absolute; bottom:-1rem; left:0px; width: 100%;">
                         <div style="display:flex; justify-content: center;">
                             <div style="padding:0.25rem 1rem; background-color: var(--mud-palette-surface); border-radius: 1rem">
-                                <MudRating SelectedValue="@((int)item.hotelstars)" />
+                                <MudRating ReadOnly SelectedValue="@((int)item.hotelstars)" />
                             </div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 </MudCardContent>
 
                 <div style="display:flex; flex-direction:row-reverse; width: 100%;">
-                        <MudButton @onclick="@(()=> navMgr.NavigateTo($"/tour/{item.tourid2}"))" Variant="Variant.Text" EndIcon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Size="Size.Small">Читать далее</MudButton>
+                    <MudButton @onclick="@(()=> navMgr.NavigateTo($"/tour/{item.tourid2}"))" Variant="Variant.Text" EndIcon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Size="Size.Small">Читать далее</MudButton>
                     <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Error" />
                     <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Success" />
   

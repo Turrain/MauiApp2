@@ -1,0 +1,30 @@
+﻿@page "/settings"
+@inject NavigationManager navMgr
+@inject GlobalPrefs prefs
+<div style="padding:1rem">
+	<div style="display:flex; flex-direction:column; gap: 8px; align-items: center">
+		<div style="display:flex;width:100%; justify-content:center; flex-direction:row; ">
+			<MudAvatar Size="Size.Large" Color="Color.Primary">A</MudAvatar>
+		</div>
+		<MudText Typo="Typo.h5">Java De Curso</MudText>
+		<MudText Style="margin-top:-0.5rem; margin-bottom:2rem;" Typo="Typo.body2">+7 707 160 27 09</MudText>
+
+		<MudPaper Style="width: 80%; border-radius:8px; margin:auto; padding:4px;" Elevation="0">
+				<MudButton StartIcon="@Icons.Material.Filled.ManageAccounts" Variant="Variant.Text" Color="Color.Primary">Изменить фотографию</MudButton>
+		</MudPaper>
+		<MudPaper Style="width: 80%; border-radius:8px; margin:auto; padding:4px;" Elevation="0">
+			<MudButton StartIcon="@Icons.Material.Filled.ManageAccounts" Variant="Variant.Text" Color="Color.Primary" @onclick="@(()=>prefs.isDarkMode = !prefs.isDarkMode)">Сменить тему</MudButton>
+		
+		</MudPaper>
+		<MudPaper Style="width: 80%; border-radius:8px; margin:auto; padding:4px;" Elevation="0">
+			<MudButton StartIcon="@Icons.Material.Filled.ManageAccounts" Variant="Variant.Text" Color="Color.Primary" @onclick="@(() => navMgr.NavigateTo("/instructions"))">Посмотреть заставку</MudButton>
+
+		</MudPaper>
+	</div>
+
+</div>
+
+
+@code {
+
+}
