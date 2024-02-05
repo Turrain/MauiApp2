@@ -1,8 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @inject IDialogService Dialog
 @inject GlobalPrefs prefs
-
-<MudThemeProvider @bind-IsDarkMode="@prefs.isDarkMode" Theme="_theme" />
+@inject PrefStorage storage
+<MudThemeProvider @bind-IsDarkMode="@prefs.isDarkMode" Theme="MyCustomTheme" />
 @inject NavigationManager navMgr
 <MudDialogProvider MaxWidth="MaxWidth.Large" />
 <MudSnackbarProvider />
@@ -13,7 +13,7 @@
 <MudLayout>
     <MudAppBar Elevation="0">
        <div style="display:flex; align-items:center; justify-content: space-between; width:100%;">
-            <MudText Typo="Typo.h6">SecPass v1.0</MudText>
+            <MudText Typo="Typo.h6">Bihan Travel</MudText>
        </div>
     </MudAppBar>
 
@@ -33,17 +33,31 @@
 
 @code {
     private MudTheme _theme = new();
+    MudTheme MyCustomTheme = new MudTheme()
+        {
+            Palette = new PaletteLight()
+            {
+                Primary = Colors.Brown.Default,
+                Secondary = Colors.LightGreen.Accent4,
+                AppbarBackground = Colors.Brown.Darken4,
+            },
+            PaletteDark = new PaletteDark()
+            {
+                Primary = Colors.Brown.Default,
+            },
 
+        };
 
     public bool AlarmOn { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();
         prefs.themeChanged += (bool value) => StateHasChanged();
+        prefs.tourpacks = storage.Get<Dictionary<string, object[]>>("tourpacks");
+
     }
     private void OpenDialog()
     {
-      
         Dialog.Show<Pages.SearchDialog>("Поиск", new DialogOptions() { Position = DialogPosition.TopCenter });
     }
 }

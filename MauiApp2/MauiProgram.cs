@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MauiApp2.Models;
+using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using Newtonsoft.Json;
 namespace MauiApp2
@@ -20,6 +21,8 @@ namespace MauiApp2
 			builder.Services.AddMudBlazorDialog();
 			builder.Services.AddSingleton<PrefStorage>();
 			builder.Services.AddSingleton<GlobalPrefs>();
+			builder.Services.AddSingleton<HotTourModel>();
+			
 
 #if DEBUG
 			builder.Services.AddBlazorWebViewDeveloperTools();

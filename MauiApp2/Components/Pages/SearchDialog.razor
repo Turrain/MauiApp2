@@ -3,7 +3,7 @@
 <MudDialog>
 	<DialogContent>
 
-		<MudCard>
+		<MudCard Elevation="0">
 			<MudForm  @ref="@form"  ValidationDelay="0">
 				<MudCardContent>
 					@if (jsonData != null)
@@ -67,8 +67,8 @@
 		</MudCard>
 	</DialogContent>
 	<DialogActions>
-		<MudButton OnClick="Cancel">Cancel</MudButton>
-		<MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+		<MudButton OnClick="Cancel">Отмена</MudButton>
+		<MudButton Color="Color.Primary" OnClick="Submit">Ок</MudButton>
 	</DialogActions>
 </MudDialog>
 @code {

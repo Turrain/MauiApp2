@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject NavigationManager navMgr
+
 <div style="margin-top: 2rem;">
 	@if (jsonData != null)
     {
@@ -60,7 +61,7 @@
     
 </div>
 @code {
-    private dynamic? jsonData = null;
+    private Models.HotTourModel? jsonData = null;
     protected override async Task OnInitializedAsync()
     {
         try
@@ -69,7 +70,7 @@
             var response = await httpClient.GetAsync("https://tourvisor.ru/xml/modhot.php?format=json&currency=3&referrer=https://travelstory.kz");
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
-            jsonData = JsonConvert.DeserializeObject(jsonString);
+            jsonData = JsonConvert.DeserializeObject<Models.HotTourModel>(jsonString);
             var a = jsonData;
         }catch(Exception e)
         {
