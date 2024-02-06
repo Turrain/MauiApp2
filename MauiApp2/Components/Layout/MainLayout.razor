@@ -12,9 +12,17 @@
 
 <MudLayout>
     <MudAppBar Elevation="0">
-       <div style="display:flex; align-items:center; justify-content: space-between; width:100%;">
-            <MudText Typo="Typo.h6">Bihan Travel</MudText>
-       </div>
+        @if(prefs.datalists != null)
+        {
+
+            <MudSelect @bind-Value="prefs.selectedCountry"  Label="Select fast-food" HelperText="String" Style="width: 100px;" Placeholder="Please Select" AdornmentIcon="@Icons.Material.Filled.LocationCity" AdornmentColor="Color.Primary">
+                @foreach (var item in prefs.datalists.lists.departures.departure)
+                {
+                    <MudSelectItem Value="@((int)(item.id))">@((string)item.name)</MudSelectItem>
+                }
+
+            </MudSelect>
+}
     </MudAppBar>
 
     <MudAppBar Color="Color.Surface" Bottom="true" style="height:70px !Important ; background-color: var(--mud-palette-surface);">
@@ -53,6 +61,8 @@
     {
         base.OnInitialized();
         prefs.themeChanged += (bool value) => StateHasChanged();
+        prefs.OnDataListsLoaded += (e) => StateHasChanged();
+        
        
 
     }

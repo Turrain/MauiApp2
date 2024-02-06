@@ -20,12 +20,17 @@ namespace MauiApp2
 			builder.Services.AddMudServices();
 			builder.Services.AddMudBlazorDialog();
 			builder.Services.AddSingleton<PrefStorage>();
-			builder.Services.AddSingleton<GlobalPrefs>();
+			builder.Services.AddSingleton<GlobalPrefs>((a)=>{
+				var gp = new GlobalPrefs();
+				gp.OnInitAsync();
+				return gp;
+			});
 			builder.Services.AddSingleton<HotTourModel>();
-			
+           
+
 
 #if DEBUG
-			builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Services.AddBlazorWebViewDeveloperTools();
 			builder.Logging.AddDebug();
 #endif
 			
