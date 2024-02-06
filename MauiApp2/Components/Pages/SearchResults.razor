@@ -1,9 +1,9 @@
-﻿@page "/search_result/{datefrom}/{dateto}/{adults}/{child}/{country}/{departure}/"
+﻿@page "/search_result/{datefrom}/{dateto}/{country}/{departure}/"
 @inject NavigationManager navMgr
 <div style="margin-top: 2rem;">
     @if (jsonObject != null)
     {
-        @if (jsonObject.data.status.progress != 100)
+        @if (jsonObject.data.status.progress != null && jsonObject.data.status.progress != 100)
         {
             <MudProgressLinear Color="Color.Primary" Value="@((int)jsonObject.data.status.progress)"/>
         }
@@ -119,9 +119,12 @@
         try
         {
             var httpClient = new HttpClient();
+           
 
-            var response = await httpClient.GetAsync($"https://tourvisor.ru/xml/modsearch.php?datefrom={datefrom}&dateto={dateto}&adults={adults}&child={child}&country={country}&departure={departure}&referrer=https://travelstory.kz"
-    );
+
+
+
+            var response = await httpClient.GetAsync($"https://tourvisor.ru/xml/modsearch.php?datefrom={datefrom}&dateto={dateto}&country={country}&departure={departure}&referrer=https://travelstory.kz");
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
 

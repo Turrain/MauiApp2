@@ -1,5 +1,5 @@
 ﻿@page "/"
-<h3>MinPrices</h3>
+
 @if(jsonData != null)
 {
     @foreach(var item in jsonData.data.minprice)
@@ -11,9 +11,13 @@
     private dynamic? jsonData = null;
     bool _expanded = false;
 
-  
+
     protected override async Task OnInitializedAsync()
     {
+        if(jsonData == null)
+        {
+            
+    
         try
         {
             var httpClient = new HttpClient();
@@ -27,6 +31,6 @@
         {
             //TODO: А хуй тебе а не карточки
         }
-
+        }
     }
 }

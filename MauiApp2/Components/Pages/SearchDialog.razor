@@ -75,7 +75,7 @@
 	[CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
 	void Submit() {
-		navMgr.NavigateTo($"/search_result/{date?.ToString("dd.mm.yyyy")}/{date2?.ToString("dd.mm.yyyy")}/{IntValue3}/{IntValue4}/{stringValue2}/{stringValue}");
+		navMgr.NavigateTo($"/search_result/{date?.ToString("dd.mm.yyyy")}/{date2?.ToString("dd.mm.yyyy")}/{stringValue2}/{stringValue}");
 		MudDialog.Close(DialogResult.Ok(true));
 
 	}
