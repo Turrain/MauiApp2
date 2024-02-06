@@ -1,0 +1,96 @@
+﻿<MudCard style="margin: 1rem;">
+    <div style="position: relative;">
+        <MudCardMedia Image="@((string)item.pic_horizontal)" Height="200" />
+     </div>
+
+     <MudCardContent>
+        <div style="display:flex; align-items:center; width:100%; flex-direction:row; justify-content:space-between; width:100%; margin-top:8px;">
+            <MudRating ReadOnly SelectedValue="@((int)item.stars)" />
+            <MudText Typo="Typo.h5" Style="font-weight:bold"> @item.price T</MudText>
+        </div>
+         <MudText Typo="Typo.body1">
+             Из
+             <MudIcon Icon="@Icons.Material.Filled.FlightTakeoff" Title="Favorite" Size="Size.Small" Color="Color.Success" />
+             @item.departure
+            в
+            <MudIcon Icon="@Icons.Material.Filled.FlightLand" Title="Favorite" Size="Size.Small" Color="Color.Success" />
+            @item.country
+        </MudText>
+
+
+        <MudText Typo="Typo.body2">@item.flydate, @item.nights ночей</MudText>
+      
+        <br />
+
+        <MudDivider />
+       
+
+    </MudCardContent>
+
+
+    <MudStack Spacing="2">
+        <MudButton EndIcon="@(_expanded ? Icons.Material.Filled.ExpandLess : @Icons.Material.Filled.ExpandMore)" OnClick="@(()=>{_expanded =!_expanded;})">Посмотреть цены</MudButton>
+        <MudDivider />
+        <MudCollapse Expanded="_expanded">
+            @if(jsonData != null)
+            {
+               
+                <MudDataGrid Items="@jsonData.data.minprice" Filterable="false" SortMode="@SortMode.None" Groupable="false">
+                    <Columns>
+                        <PropertyColumn Property="x => x.flydate" Title="Дата"/>
+                        <PropertyColumn Property="x => x.nights" Title="Ночей"/>
+                        <PropertyColumn Property="x => x.price" Title="Цена (Т)"/>
+                        <TemplateColumn CellClass="d-flex justify-end">
+                            <CellTemplate>
+                                
+                                 <MudButton Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">Поиск</MudButton>
+                   
+                         </CellTemplate>
+                     </TemplateColumn>
+                    </Columns>
+                </MudDataGrid>
+                
+            }
+     
+        </MudCollapse>
+    </MudStack>
+
+</MudCard>
+@code {
+    [Parameter]
+    public dynamic item { get; set; }
+    private MinPricesModel? jsonData = null;
+    bool _expanded = false;
+    class MinPricesModel
+    {
+        public struct Minprice
+        {
+            public struct Data
+            {
+                public string flydate;
+                public string nights;
+                public string price;
+                public string @operator;
+                public string link;
+            }
+            public List<Data> minprice;
+        }
+        public Minprice data;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var httpClient = new HttpClient();
+          var response = await httpClient.GetAsync($"https://tourvisor.ru/xml/mindates.php?currency=3&country={item.countrycode}&departure={item.departurecode}&referrer=https%3A%2F%2Ftravelstory.kz%2F");
+            var jsonString = await response.Content.ReadAsStringAsync();
+            jsonData = JsonConvert.DeserializeObject<MinPricesModel>(jsonString);
+    
+        }
+        catch (Exception e)
+        {
+            //TODO: А хуй тебе а не карточки
+        }
+
+    }
+}

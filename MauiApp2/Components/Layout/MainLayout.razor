@@ -53,7 +53,7 @@
     {
         base.OnInitialized();
         prefs.themeChanged += (bool value) => StateHasChanged();
-        prefs.tourpacks = storage.Get<Dictionary<string, object[]>>("tourpacks");
+       
 
     }
     private void OpenDialog()

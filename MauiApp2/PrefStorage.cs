@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MauiApp2
 {
-    internal class PrefStorage
+    public class PrefStorage
     {
         /// <summary>
         /// Store an element using any kind of key (if it doesnt exist)
