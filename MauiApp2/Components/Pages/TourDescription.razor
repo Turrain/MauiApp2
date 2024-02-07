@@ -24,8 +24,9 @@
                     @* <i *ngFor="let item of makeRange(tour_details.data.hotel.hotelstars)" *@
                     @* class="fas fa-star text-yellow-400"></i> *@
                     <div style="font-size: 14px; line-height: 20px; font-weight: 300; text-align: right;">
+          
                         @jsonData.data.hotel.countryname,
-                        @jsonData.data.hotel.hotelregionname
+                        @jsonData.data.hotel.hotelregionname из @jsonData.data.tour.departurenamefrom
                     </div>
                     <MudRating ReadOnly="true" SelectedValue="(int)(jsonData.data.tour.hotelstars)" Style="display: flex; justify-content: center;" />
                     <div style="display: flex; gap: 4px; align-items: center; justify-content: center">
@@ -40,12 +41,6 @@
         <div style="padding: 16px; padding-top: 8px; padding-bottom: 8px;">
             <div style="font-size: 20px; line-height: 28px; font-weight: 300;">Описание</div>
             <MudDivider></MudDivider>
-            <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">Название тура: @jsonData.data.tour.tourname</div>
-            <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">Цена: @jsonData.data.tour.cleanprice</div>
-            <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">
-                @jsonData.data.tour.countryname, @jsonData.data.tour.hotelregionname из
-                @jsonData.data.tour.departurenamefrom
-            </div>
             <div style="font-size: 14px; line-height: 20px; margin-bottom: 4px;">@jsonData.data.hotel.hoteldescription</div>
         </div>
 
@@ -152,4 +147,20 @@ else
         }
 
     }
+       private async void ShareText(dynamic item)
+{
+    try
+    {
+        await Share.RequestAsync(new ShareTextRequest
+        {
+            Text = $"🏠 *{item.data.hotelname}* \n✈️ {item.data.tour.departurenamefrom} ➡️ {item.data.hotel.countryname}, {item.data.hotel.hotelregionname} \n🏷️ {item.data.tour.cleanprice} тн",
+            Title = "Поделитесь туром"
+        });
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error sharing text: {ex.Message}");
+    }
+}
+
 }

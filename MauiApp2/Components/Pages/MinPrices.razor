@@ -1,5 +1,5 @@
 ﻿@page "/"
-
+@inject GlobalPrefs prefs
 @if(jsonData != null)
 {
     @foreach(var item in jsonData.data.minprice)
@@ -12,26 +12,33 @@
     private dynamic? jsonData = null;
     bool _expanded = false;
 
-
+    private async Task LoadData(int city = 60)
+    {
+        try
+        {
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync($"https://tourvisor.ru/xml/modmin.php?format=json&city={city}&currency=3&regular=1&theme=theme2&areatype=1,2&theme=theme2&view=4&referrer=https%3A%2F%2Ftravelstory.kz%2F");
+            response.EnsureSuccessStatusCode();
+            var jsonString = await response.Content.ReadAsStringAsync();
+            jsonData = JsonConvert.DeserializeObject(jsonString);
+        }
+        catch (Exception e)
+        {
+            }
+            }
     protected override async Task OnInitializedAsync()
     {
+        prefs.OnSelectedCountryChanged += async (country) =>
+        {
+            jsonData = null;
+            await LoadData(country);
+            StateHasChanged();
+        };
         if(jsonData == null)
         {
             
     
-        try
-        {
-            var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync($"https://tourvisor.ru/xml/modmin.php?format=json&city=60&currency=3&regular=1&theme=theme2&areatype=1,2&theme=theme2&view=4&referrer=https%3A%2F%2Ftravelstory.kz%2F");
-            response.EnsureSuccessStatusCode();
-            var jsonString = await response.Content.ReadAsStringAsync();
-            jsonData = JsonConvert.DeserializeObject(jsonString);
-            var a = jsonData;
-        }
-        catch (Exception e)
-        {
-            //TODO: А хуй тебе а не карточки
-        }
+      await LoadData();
         }
     }
 }

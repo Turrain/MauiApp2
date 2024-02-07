@@ -13,14 +13,29 @@ namespace MauiApp2
         public hasThemeChanged themeChanged;
         public delegate void DataListsLoadedHandler(Models.DataListsModel data);
 
-// Define an event based on that delegate
         public event DataListsLoadedHandler OnDataListsLoaded;
         public Models.DataListsModel? dataListsModel = null;
         public bool _isDarkMode = true;
         public bool isDarkMode { get { return _isDarkMode; } set { _isDarkMode = value; themeChanged?.Invoke(_isDarkMode); } }
         private PrefStorage storage;
         public Models.DataListsModel? datalists { get; set; } = null;
-        public int selectedCountry { get; set; } = 0;
+
+        
+        public delegate void SelectedCountryChangedHandler(int value);
+        public event SelectedCountryChangedHandler OnSelectedCountryChanged;
+        private int _selectedCountry = 60;
+        public int selectedCountry
+        {
+            get { return _selectedCountry; }
+            set
+            {
+                if (_selectedCountry != value)
+                {
+                    _selectedCountry = value;
+                    OnSelectedCountryChanged?.Invoke(_selectedCountry);
+                }
+            }
+        }
     
         public async Task OnInitAsync()
         {

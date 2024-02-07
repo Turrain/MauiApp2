@@ -12,10 +12,11 @@
 
 <MudLayout>
     <MudAppBar Elevation="0">
-        @if(prefs.datalists != null)
+        <div style="width: 150px;">
+                  @if(prefs.datalists != null)
         {
 
-            <MudSelect @bind-Value="prefs.selectedCountry"  Label="Select fast-food" HelperText="String" Style="width: 100px;" Placeholder="Please Select" AdornmentIcon="@Icons.Material.Filled.LocationCity" AdornmentColor="Color.Primary">
+            <MudSelect @bind-Value="prefs.selectedCountry"   Style="width: 100px;" Placeholder="Please Select" AdornmentIcon="@Icons.Material.Filled.LocationCity" AdornmentColor="Color.Primary">
                 @foreach (var item in prefs.datalists.lists.departures.departure)
                 {
                     <MudSelectItem Value="@((int)(item.id))">@((string)item.name)</MudSelectItem>
@@ -23,19 +24,18 @@
 
             </MudSelect>
 }
+        </div>
+   
     </MudAppBar>
 
     <MudAppBar Color="Color.Surface" Bottom="true" style="height:70px !Important ; background-color: var(--mud-palette-surface);">
         <MudIconButton Class="ma-auto" Icon="@Icons.Material.Filled.Search" Variant="Variant.Text" Color="Color.Info" Size="Size.Medium" OnClick="@((e) => OpenDialog())" />
         <MudIconButton Class="ma-auto" Icon="@Icons.Material.Filled.LocalFireDepartment" Variant="Variant.Text" Color="Color.Error" Size="Size.Large" @onclick="@(()=>navMgr.NavigateTo("/"))" />
-
         <MudIconButton Class="ma-auto" Icon="@Icons.Material.Filled.Person" Variant="Variant.Text" Color="Color.Info" Size="Size.Medium" @onclick="@(()=>navMgr.NavigateTo("/settings"))" />
     </MudAppBar>
 
     <MudMainContent Style="margin-bottom:80px;">
-     
             @Body
-      
     </MudMainContent>
 </MudLayout>
 
@@ -51,7 +51,7 @@
             },
             PaletteDark = new PaletteDark()
             {
-                Primary = Colors.Brown.Default,
+            
             },
 
         };

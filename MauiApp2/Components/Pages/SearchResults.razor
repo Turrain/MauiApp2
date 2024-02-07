@@ -5,7 +5,9 @@
     {
         @if (jsonObject.data.status.progress != null && jsonObject.data.status.progress != 100)
         {
-            <MudProgressLinear Color="Color.Primary" Value="@((int)jsonObject.data.status.progress)"/>
+            <MudProgressLinear Striped="true" Size="Size.Large" Color="Color.Primary"
+                Value="@((int)jsonObject.data.status.progress)" />
+
         }
         @if (jsonObject.data.block != null)
         {
@@ -13,85 +15,101 @@
             {
                 @foreach (dynamic hotel in ((JArray)block.hotel).Take(5))
                 {
-                     <MudCard style="margin: 1rem;">
-                    <div style="position: relative;">
-                      <MudCardMedia Image="@((string)jsonObject.data.decode.hotels[(string)hotel.id].pic)" Height="200" />
-                        
+                    <MudCard style="margin: 1rem;">
+                        <div style="position: relative;">
+                            <MudCardMedia Image="@((string)jsonObject.data.decode.hotels[(string)hotel.id].pic)" Height="200" />
 
-                        <div style="position: absolute; bottom:-1rem; left:0px; width: 100%;">
-                            <div style="display:flex; justify-content: center;">
-                                <div style="padding:0.25rem 1rem; background-color: var(--mud-palette-surface); border-radius: 1rem">
+                            <div style="position: absolute; bottom:-1rem; left:0px; width: 100%;">
+                                <div style="display:flex; justify-content: center;">
+                                    <div
+                                        style="padding:0.25rem 1rem; background-color: var(--mud-palette-surface); border-radius: 1rem">
                                         <MudRating SelectedValue="@((int)jsonObject.data.decode.hotels[(string)hotel.id].stars)" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <MudCardContent>
+                        <MudCardContent>
                             <MudText Typo="Typo.h6">@jsonObject.data.decode.hotels[(string)hotel.id].name</MudText>
-                                <MudText Typo="Typo.caption">@jsonObject.data.decode.hotels[(string)hotel.id].region,</MudText>
-                                <MudText Typo="Typo.caption">@((string)jsonObject.data.decode.hotels[(string)hotel.id].subregion)</MudText>
+                            <MudText Typo="Typo.caption">@jsonObject.data.decode.hotels[(string)hotel.id].region,</MudText>
+                            <MudText Typo="Typo.caption">@((string)jsonObject.data.decode.hotels[(string)hotel.id].subregion)</MudText>
                             <MudDivider />
                             <div style="display:flex; align-items:center; gap:4px; margin-top:8px;">
-                                <MudIcon Icon="@Icons.Material.Filled.Payments" Title="Favorite" Size="Size.Small" Color="Color.Success" />
+                                <MudIcon Icon="@Icons.Material.Filled.Payments" Title="Favorite" Size="Size.Small"
+                                    Color="Color.Success" />
                                 <MudText Typo="Typo.body2">Цена: @hotel.price T</MudText>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:4px; margin-top:8px;">
-                                <MudIcon Icon="@Icons.Material.Filled.RateReview" Title="Favorite" Size="Size.Small" Color="Color.Success" />
+                            </div>
+                            <div style="display:flex; align-items:center; gap:4px; margin-top:8px;">
+                                <MudIcon Icon="@Icons.Material.Filled.RateReview" Title="Favorite" Size="Size.Small"
+                                    Color="Color.Success" />
                                 <MudText Typo="Typo.body2">Рейтинг: @jsonObject.data.decode.hotels[(string)hotel.id].rating</MudText>
                             </div>
-                                <div style="display:flex; align-items:center; gap:4px; margin-top:8px; margin-bottom:8px;">
-                                    <MudIcon Icon="@Icons.Material.Filled.People" Title="Favorite" Size="Size.Small" Color="Color.Success" />
-                                    <MudText Typo="Typo.body2">Популярность: @jsonObject.data.decode.hotels[(string)hotel.id].pop</MudText>
-                                </div>
-                                <MudDivider Style="margin-bottom:8px;"/>
-                                <MudText Style="margin-bottom:8px;"  Typo="Typo.body2">@jsonObject.data.decode.hotels[(string)hotel.id].desc</MudText>
-                                <div>
-                                    <MudExpansionPanels MultiExpansion="true">
-                                    
-                                
+                            <div style="display:flex; align-items:center; gap:4px; margin-top:8px; margin-bottom:8px;">
+                                <MudIcon Icon="@Icons.Material.Filled.People" Title="Favorite" Size="Size.Small"
+                                    Color="Color.Success" />
+                                <MudText Typo="Typo.body2">Популярность: @jsonObject.data.decode.hotels[(string)hotel.id].pop</MudText>
+                            </div>
+                            <MudDivider Style="margin-bottom:8px;" />
+                            <MudText Style="margin-bottom:8px;" Typo="Typo.body2">@jsonObject.data.decode.hotels[(string)hotel.id].desc
+                            </MudText>
+                            <div>
+                                <MudExpansionPanels MultiExpansion="true">
                                     @foreach (var tour in hotel.tour)
-                {
-
-
-                                        <MudExpansionPanel Text="@($"{jsonObject.data.decode.tourname[(string)tour.nm].name} за {tour.pr} T")">
+                                    {
+                                        <MudExpansionPanel
+                                            Text="@($"{jsonObject.data.decode.tourname[(string)tour.nm].name} за {tour.pr} T")">
                                             <div style="display:flex; flex-direction:column; gap:4px; padding:8px;">
                                                 <div style="display:flex; flex-direction:row; gap:8px;">
                                                     <MudIcon Icon="@Icons.Material.Filled.Bed" Title="Favorite" />
                                                     <MudText Typo="Typo.body2">Ночей: @tour.nt</MudText>
                                                 </div>
-                                                    <div style="display:flex; flex-direction:row; gap:8px;">
-                                                        <MudIcon Icon="@Icons.Material.Filled.Restaurant" Title="Favorite" />
-                                                        <MudText Typo="Typo.body2"> Тип Обеда:@jsonObject.data.decode.meal[(string)tour.ml].name</MudText>
-                                                    </div>
-                                                    <div style="display:flex; flex-direction:row; gap:8px;">
-                                                        <MudIcon Icon="@Icons.Material.Filled.RoomPreferences" Title="Favorite" />
-                                                        <MudText Typo="Typo.body2"> Тип Комнат:@jsonObject.data.decode.rooms[(string)tour.rm].name </MudText>
-                                                    </div>
+                                                <div style="display:flex; flex-direction:row; gap:8px;">
+                                                    <MudIcon Icon="@Icons.Material.Filled.Restaurant" Title="Favorite" />
+                                                    <MudText Typo="Typo.body2"> Тип Обеда:@jsonObject.data.decode.meal[(string)tour.ml].name
+                                                    </MudText>
+                                                </div>
+                                                <div style="display:flex; flex-direction:row; gap:8px;">
+                                                    <MudIcon Icon="@Icons.Material.Filled.RoomPreferences" Title="Favorite" />
+                                                    <MudText Typo="Typo.body2"> Тип
+                                                        Комнат:@jsonObject.data.decode.rooms[(string)tour.rm].name </MudText>
+                                                </div>
                                             </div>
                                             <div style="display:flex; flex-direction:row-reverse; width:100%; ">
-                                                    <MudButton @onclick="@(()=> navMgr.NavigateTo($"/tour/{tour.id}"))" Variant="Variant.Text" EndIcon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Size="Size.Small">Читать далее</MudButton>
+                                                <MudButton @onclick="@(()=> navMgr.NavigateTo($"/tour/{tour.id}"))" Variant="Variant.Text"
+                                                    EndIcon="@Icons.Material.Filled.Send" IconColor="Color.Primary" Size="Size.Small">Читать
+                                                    далее</MudButton>
                                             </div>
                                         </MudExpansionPanel>
-                                }
+                                    }
                                 </MudExpansionPanels>
 
-                                </div>
+                            </div>
 
                         </MudCardContent>
-                       
+
                     </MudCard>
                 }
             }
         }
         else
         {
-            <MudText> Ничего не найдено </MudText>
+            <MudText> Идет поиск </MudText>
         }
     }
     else
     {
-        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        <MudProgressLinear Striped="true" Size="Size.Large" Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        <MudCard>
+            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" />
+            <MudCardContent>
+                <MudSkeleton Width="30%" Height="42px;" />
+                <MudSkeleton Width="80%" />
+                <MudSkeleton Width="100%" />
+            </MudCardContent>
+            <MudCardActions>
+                <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
+                <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+            </MudCardActions>
+        </MudCard>
     }
 
 
@@ -119,12 +137,13 @@
         try
         {
             var httpClient = new HttpClient();
-           
 
 
 
 
-            var response = await httpClient.GetAsync($"https://tourvisor.ru/xml/modsearch.php?datefrom={datefrom}&dateto={dateto}&country={country}&departure={departure}&referrer=https://travelstory.kz");
+
+            var response = await
+            httpClient.GetAsync($"https://tourvisor.ru/xml/modsearch.php?datefrom={datefrom}&dateto={dateto}&country={country}&departure={departure}&referrer=https://travelstory.kz");
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
 
@@ -136,13 +155,14 @@
 
             do
             {
-                var response2 = await httpClient.GetAsync($"https://search3.tourvisor.ru/modresult.php?json&requestid={a}&referrer=https://travelstory.kz");
+                var response2 = await
+                httpClient.GetAsync($"https://search3.tourvisor.ru/modresult.php?json&requestid={a}&referrer=https://travelstory.kz");
                 response2.EnsureSuccessStatusCode();
                 var jsonString3 = await response2.Content.ReadAsStringAsync();
                 var jsonString4 = System.Web.HttpUtility.HtmlDecode(jsonString3);
                 jsonData = JsonConvert.DeserializeObject(jsonString4);
                 jsonObject = JObject.Parse(jsonString4);
-            //    dynamic s = jsonObject.data.decode.hotels["17422"];
+                // dynamic s = jsonObject.data.decode.hotels["17422"];
                 InvokeAsync(StateHasChanged);
                 if (jsonData.data.status.progress == 100) break;
 
@@ -152,10 +172,10 @@
             Console.WriteLine("AA");
 
         }
-		catch (Exception e)
-		{
-			//TODO: А хуй тебе а не карточки
-		}
+        catch (Exception e)
+        {
+            //TODO: А хуй тебе а не карточки
+        }
 
-	}
+    }
 }

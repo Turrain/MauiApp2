@@ -57,7 +57,7 @@
 					}
 					else
 					{
-						<MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+						<MudProgressLinear  Striped="true" Size="Size.Large" Color="Color.Primary" Indeterminate="true" Class="my-7" />
 					}
 
 
@@ -81,8 +81,8 @@
 	}
 	void Cancel() => MudDialog.Cancel();
 
-	private int stringValue { get; set; } 
-	private int stringValue2 { get; set; } 
+	private int stringValue { get; set; }  = 60;
+	private int stringValue2 { get; set; } = 9;
 
 	DateTime? date	=	DateTime.Today;
 	DateTime? date2 =	DateTime.Now.AddDays(5).Date;
